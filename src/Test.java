@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 public class Test {
     public static void main(String[] args) {
 
@@ -8,6 +12,7 @@ public class Test {
         If the answer is "Yes" from user,then ask user information; firstName, lastName, age, gender, class to join
         ***If user is age is not more than 20, do not allow them to join
         ***If user wants to join any other class except Math and Science, do not allow them to join
+
 
         REMEMBER - checkAge and checkClassName methods may throw exceptions. You have to handle them
 
@@ -22,5 +27,67 @@ public class Test {
         Print how many students are MathStudent with message -> "Math students = {numberOfMathStudents}"
         Print how many students are ScienceStudent with message -> "Science students = {numberOfScienceStudents}"
          */
+        Scanner input = new Scanner(System.in);
+
+        String answer;
+        int numberOfMathStudents = 0;
+        int numberOfScienceStudents = 0;
+        int age = 0;
+        String className = "";
+        List<Student> studentList = new ArrayList<>();
+
+
+        do {
+            System.out.println(UserQuestions.askToJoin);
+            answer = input.next();
+
+            if (answer.toUpperCase().startsWith("Y")) {
+                System.out.println(UserQuestions.askFirstName);
+                String firstName = input.next();
+                System.out.println(UserQuestions.askLastName);
+                String lastName = input.next();
+                try {
+                    System.out.println(UserQuestions.askAge);
+                    age = input.nextInt();
+                    Permission.checkAge(age);
+                } catch (Exception e) {
+                    System.out.println(age + " is not allowed");
+                }
+                if (age > 20){
+
+                    System.out.println(UserQuestions.gender);
+                    String gender = input.next();
+                    try {
+                        System.out.println(UserQuestions.askClassName);
+                        className = input.next();
+                        Permission.checkClassName(className);
+                        if (className.equalsIgnoreCase("Math")) {
+                            numberOfMathStudents++;
+                            System.out.println("Congratulations! You are registered for " + className + " class.");
+                            MathStudent mathStudent = new MathStudent(firstName, lastName, age, gender, className);
+                            studentList.add(mathStudent);
+                        } else if (className.equalsIgnoreCase("Science")) {
+                            numberOfScienceStudents++;
+                            System.out.println("Congratulations! You are registered for " + className + " class.");
+                            ScienceStudent scienceStudent = new ScienceStudent(firstName, lastName, age, gender, className);
+                            studentList.add(scienceStudent);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(className + " is not allowed");
+
+                    }
+                }
+            }
+
+
+        }while (numberOfMathStudents + numberOfScienceStudents < 3) ;
+        for (Student student : studentList) {
+            System.out.println(student.toString());
+        }
+        System.out.println("Math students = " + numberOfMathStudents);
+        System.out.println("Science students = " + numberOfScienceStudents);
+
+        System.out.println("End of the program");
+
     }
 }
